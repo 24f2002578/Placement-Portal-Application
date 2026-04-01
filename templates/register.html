@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %} Register: Be-Rozgar {% endblock %}
+
+{% block content %}
+    <header>
+        <h1>Be-Rozgar</h1>
+        <p>Join us and shape your future.</p>
+    </header>
+
+    <main>
+        <form action="/register" method="POST">
+            <div>
+                <label for="fullname">Full Name:</label><br>
+                <input type="text" id="fullname" name="fullname" placeholder="Enter your full name" required autocomplete="name">
+            </div>
+            <br>
+
+            <div>
+                <label for="email">Email:</label><br>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required autocomplete="email">
+            </div>
+            <br>
+
+            <div>
+                <label for="role">Role:</label><br>
+                <select id="role" name="role" required>
+                    <option value="" disabled selected>Select your Role</option>
+                    <option value="student">Student</option>
+                    <option value="company">Company</option>
+                </select>
+            </div>
+            <br>
+            
+            <div>
+                <label for="password">Password:</label><br>
+                <input type="password" id="password" name="password" placeholder="Create a password" required autocomplete="new-password" minlength="8" maxlength="12" pattern=".*[A-Z].*" title="Password must be 8-12 characters long and contain at least 1 capital letter.">
+                <br><small style="color: #666; font-size: 0.85em;">Password must be 8-12 characters long and contain at least 1 capital letter.</small>
+            </div>
+            <br>
+            <div>
+                <label for="confirm-password">Confirm Password:</label><br>
+                <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password" required autocomplete="new-password">
+            </div>
+            <br>
+            <div>
+                <button type="submit">Sign Up</button>
+            </div>
+        </form>
+
+        <p>Already have an account? <a href="login.html">Log in</a></p>
+    </main>
+    {% endblock %}
