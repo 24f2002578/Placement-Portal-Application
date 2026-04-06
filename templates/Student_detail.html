@@ -1,0 +1,179 @@
+<div class="container-fluid row justify-content-center mb-5">
+
+    <form class="col-6" action="{{url_for('studentinfo')}}" method="POST" enctype="multipart/form-data">
+        <h1>Student Information</h1>
+        <div title="Personal Details"> 
+            <h3>Personal Details</h3>
+            <div class="mb-3">
+                <label for="firstname" class="form-label">First Name</label>
+                <input type="text" class="form-control" id="firstname" name="firstname" placeholder="First Name" required>
+            </div>
+            <div class="mb-3">
+                <label for="lastname" class="form-label">Last Name</label>
+                <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Last Name" required>
+            </div>
+            <div class="mb-3">
+                <label for="age" class="form-label">Age</label>
+                <input type="number" class="form-control" id="age" name="age" placeholder="Age" required>
+            </div>
+            <div class="mb-3">
+                <label for="gender" class="form-label">Gender</label>
+                <select class="form-control" id="gender" name="gender" required>
+                    <option value="" disabled selected>Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Prefer not to say</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="student_mail" class="form-label">Email</label>
+                <input type="email" class="form-control" id="student_mail" name="student_mail" placeholder="Enter Student Email" required>
+            </div>
+            <div class="mb-3">
+                <label for="contact" class="form-label">Contact</label>
+                <input type="tel" class="form-control" id="contact" name="contact" placeholder="Contact" minlength="10" maxlength="10" title="Contact must be 10 digits long" required>
+            </div>
+        </div>
+
+        <div title="Educational Details"> 
+            <h3>Educational Details</h3>
+            <div class="mb-3">
+                <label for="qualification">Qualification</label>
+                    <select id="qualification" name="qualification" required>
+                        <option value="" disabled selected>Select your Qualification</option>
+                        <option value="highschool">Higher Secondary</option>
+                        <option value="bachelor">Bachelor's Degree</option>
+                        <option value="master">Master's Degree</option>
+                        <option value="phd">PhD</option>
+                    </select>
+
+            <div class="mb-3">
+                <label for="college" class="form-label">College</label>
+                <input type="text" class="form-control" id="college" name="college">
+            </div>
+            <div class="mb-3">
+                    <label for="university" class="form-label">University</label>
+                    <input type="text" class="form-control" id="university" name="university">
+            </div>
+            <div class="mb-3">
+                <label for="course" class="form-label">Course</label>
+                <input type="text" class="form-control" id="course" name="course" placeholder="Enter course Ex:BS in Data Science">
+            </div>
+            <div class="mb-3">
+                <label for="graduation_year" class="form-label">Graduation Year</label>
+                <input type="number" class="form-control" id="graduation_year" name="graduation_year" placeholder="Enter graduation year Ex: 2000" minlength="4" maxlength="4">
+            </div>
+            <div>
+                <label for="experience" class="form-label">Work Experience</label>
+                <input type="text" class="form-control" id="experience" name="experience" placeholder="Enter your experience in year">
+            </div>
+        </div>
+
+        <div title="Address Details"> 
+            <h3>Address Details</h3>
+            <div class="mb-3">
+                <label for="city_state" class="form-label">City, State</label>
+                <input list="city_state" name="city_state" class="form-control mb-3" placeholder="City, State" required>
+                <datalist id="city_state">
+                    <option value="Mumbai, Maharashtra">
+                    <option value="Pune, Maharashtra">
+                    <option value="Nagpur, Maharashtra">
+                    <option value="Nashik, Maharashtra">
+                    <option value="Aurangabad, Maharashtra">
+                    <option value="Thane, Maharashtra">
+                    <option value="Pimpri-Chinchwad, Maharashtra">
+                    <option value="Amravati, Maharashtra">
+
+                    <option value="Bangalore, Karnataka">
+                    <option value="Hyderabad, Telangana">
+                    <option value="Chennai, Tamil Nadu">
+                    <option value="Delhi, NCR">
+                    <option value="Kolkata, West Bengal">
+                    <option value="Ahmedabad, Gujarat">
+                    
+                    <option value="Indore, Madhya Pradesh">
+                    <option value="Bhopal, Madhya Pradesh">
+                    <option value="Jaipur, Rajasthan">
+                    <option value="Lucknow, Uttar Pradesh">
+                    <option value="Noida, Uttar Pradesh">
+                    <option value="Gurgaon, Haryana">
+                    <option value="Chandigarh, Punjab/Haryana">
+                    <option value="Patna, Bihar">
+                    <option value="Ranchi, Jharkhand">
+                    <option value="Bhubaneswar, Odisha">
+                    <option value="Guwahati, Assam">
+                    <option value="Thiruvananthapuram, Kerala">
+                    <option value="Kochi, Kerala">
+                    <option value="Coimbatore, Tamil Nadu">
+                    <option value="Visakhapatnam, Andhra Pradesh">
+                    <option value="Vijayawada, Andhra Pradesh">
+                    <option value="Dehradun, Uttarakhand">
+                    <option value="Raipur, Chhattisgarh">
+                </datalist>
+            </div>
+            <div class="mb-3">
+                <label for="address" class="form-label">Address</label>
+                <input type="text" class="form-control" id="address" name="address" placeholder="Enter address" required>
+            </div>  
+        </div>
+
+        <div title="Preferences"> 
+            <h3>Preferences</h3>
+             <div class="mb-3">
+                <label for="job_preference">Job Preference</label>
+                    <select id="job_preference" name="job_preference" required>
+                        <option value="" disabled selected>Select Job Type</option>
+                        <option value="full_time">Internship</option>
+                        <option value="full_time">Full Time Job</option>
+                        <option value="part_time">Part Time Job</option>
+                        <option value="freelance">Freelance</option>
+                    </select>
+             </div>
+             <div class="mb-3">
+                <label for="work_mode_preference">Work Mode Preference</label>
+                    <select id="work_mode_preference" name="work_mode_preference" required>
+                        <option value="" disabled selected>Select your Work Mode Preference</option>
+                        <option value="remote">Remote</option>
+                        <option value="onsite">On-site</option>
+                        <option value="hybrid">Hybrid</option>
+                    </select>
+             </div>
+             <div class="mb-3">
+                <label for="location_preference">Are You Open to Relocation?</label>
+                    <select id="location_preference" name="location_preference" required>
+                        <option value="" disabled selected>Relocation Status</option>
+                        <option value="remote">Yes</option>
+                        <option value="onsite">No</option>
+                        <option value="hybrid">Open to Discuss</option>
+                    </select>
+             </div>
+        </div> 
+
+        <div title="Portfolio Details"> 
+             <h3>Portfolio Details</h3>
+             <div class="mb-3">
+                <label for="resume" class="form-label">Upload Resume (PDF only)</label>
+                <input type="file" class="form-control" name="resume" id="resume" accept=".pdf" required>
+            </div>
+            <div class="mb-3">
+                <label for="linkedin_profile" class="form-label">LinkedIn Profile</label>
+                <input type="url" class="form-control" id="linkedin_profile" name="linkedin_profile" placeholder="Enter your LinkedIn profile URL">
+             </div>
+             <div class="mb-3">
+                <label for="github_profile" class="form-label">GitHub Profile</label>
+                <input type="url" class="form-control" id="github_profile" name="github_profile" placeholder="Enter your GitHub profile URL">
+             </div>
+        </div>
+
+        <!-- <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" name="terms_agreed" id="terms" required>
+            <label class="form-check-label" for="terms">
+                I agree to the Terms and Conditions and allow the placement cell to share my profile with recruiters.
+            </label>
+        </div>   
+        <div class="invalid-feedback">
+        You must agree before submitting.
+        </div> -->
+        <button type="submit" class="btn btn-primary w-100">Submit</button>
+    </form>
+</div>

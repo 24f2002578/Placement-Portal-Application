@@ -54,14 +54,26 @@ class StudentProfile(db.Model):
     __tablename__ = 'student_profile'
     student_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+    student_mail = db.Column(db.String(120), nullable=False)
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
     contact = db.Column(db.String(10), nullable=False)
+    age = db.Column(db.Integer, nullable=False)
+    gender = db.Column(db.String(10), nullable=False)
+    city_state = db.Column(db.String(120), nullable=False)
+    address = db.Column(db.String(256), nullable=False)
     qualification = db.Column(db.String(50), nullable=False)
     college = db.Column(db.String(256), nullable=False)
     university = db.Column(db.String(120), nullable=True)
     course = db.Column(db.String(50), nullable=False)
     graduation_year = db.Column(db.Integer, nullable=False)
+    location_preference = db.Column(db.String(120), nullable=True)
+    work_mode_preference = db.Column(db.String(20), nullable=True)
+    job_preference = db.Column(db.String(120), nullable=True) # Internship, Full-time, Part-time, Freelance
+    experience = db.Column(db.Text, nullable=True)
+    resume = db.Column(db.String(256))
+    linkedin_profile = db.Column(db.String(256), nullable=True)
+    github_profile = db.Column(db.String(256), nullable=True)
 
     applications = db.relationship('Application', backref='student', lazy=True)
 
@@ -72,19 +84,22 @@ class PlacementDrive(db.Model):
     __tablename__ = 'placement_drive'
     placement_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     company_id = db.Column(db.Integer, db.ForeignKey('company_profile.company_id'), nullable=False)
-    job_title = db.Column(db.String(120), nullable=False)
+    job_role = db.Column(db.String(120), nullable=False)
     job_description = db.Column(db.Text, nullable=True)
-    job_mode = db.Column(db.String(20), nullable=False) # On-campus or Off-campus
+    job_mode = db.Column(db.String(20), nullable=False)
+    job_type = db.Column(db.String(20), nullable=False) # On-campus or Off-campus
     job_location = db.Column(db.String(120), nullable=True)
     work_hours = db.Column(db.String(50), nullable=True)
     salary = db.Column(db.Float, nullable=True)
-    deadline = db.Column(db.DateTime, nullable=False)
+    eligibility_criteria = db.Column(db.Text, nullable=True)
+    skills = db.Column(db.String(256), nullable=True)
+    deadline = db.Column(db.String(20), nullable=False)
     status = db.Column(db.String(20), default='Pending') # Open or Closed
 
     applications = db.relationship('Application', backref='placement_drive', lazy=True)
 
     def __repr__(self):
-        return f'<PlacementDrive {self.job_title} at Company ID {self.company_id}>'  
+        return f'<PlacementDrive {self.job_role} at Company ID {self.company_id}>'  
     
 class Application(db.Model):
     __tablename__ = 'application'

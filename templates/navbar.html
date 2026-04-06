@@ -6,17 +6,49 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Login</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Register</a>
-        </li>
-      </ul>
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
+        {% if not session.get('user_email', None) %}
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{{url_for('login')}}">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{url_for('register')}}">Register</a>
+          </li>
+
+        {% else %}
+          {% if 'admin' in session.get('user_role') | list %}
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="a">Approve_Students</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{{url_for('logout')}}">Logout</a>
+            </li>
+
+          {% elif 'Student' in session.get('user_role', None) | list %}
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{{url_for('stude')}}">Placement Drive</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{{url_for('logout')}}">Logout</a>
+            </li>
+
+          {% elif 'Company' in session.get('user_role', None) | list %}
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{{url_for('placement_drive')}}">Placement Drive</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{{url_for('logout')}}">Logout</a>
+            </li>
+
+          {% else %}
+            <!-- <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="a">Approve_Students</a>
+            </li> -->
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{{url_for('logout')}}">Logout</a>
+            </li>
+          {% endif %}
+        {% endif %} 
+      </ul> 
     </div>
   </div>
 </nav>

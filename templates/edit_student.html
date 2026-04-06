@@ -1,0 +1,170 @@
+<div class="container-fluid row justify-content-center mb-5">
+
+    <form class="col-6" action="{{url_for('edit_student', user_id=student.user_id)}}" method="POST" enctype="multipart/form-data">
+        <h1>Student Information</h1>
+        <div title="Personal Details"> 
+            <h3>Personal Details</h3>
+            <div class="mb-3">
+                <label for="firstname" class="form-label">First Name</label>
+                <input type="text" class="form-control" id="firstname" name="firstname" value="{{ student.first_name }}">
+            </div>
+            <div class="mb-3">
+                <label for="lastname" class="form-label">Last Name</label>
+                <input type="text" class="form-control" id="lastname" name="lastname" value="{{ student.last_name }}">
+            </div>
+            <div class="mb-3">
+                <label for="age" class="form-label">Age</label>
+                <input type="number" class="form-control" id="age" name="age" value="{{ student.age }}">
+            </div>
+            <div class="mb-3">
+                <label for="student_mail" class="form-label">Email</label>
+                <input type="email" class="form-control" id="student_mail" name="student_mail" value="{{ student.student_mail }}">
+            </div>
+            <div class="mb-3">
+                <label for="contact" class="form-label">Contact</label>
+                <input type="tel" class="form-control" id="contact" name="contact" value="{{ student.contact }}" minlength="10" maxlength="10" title="Contact must be 10 digits long">
+            </div>
+        </div>
+
+        <div title="Educational Details"> 
+            <h3>Educational Details</h3>
+            <div class="mb-3">
+                <label for="qualification">Qualification</label>
+                    <select id="qualification" name="qualification">
+                        <option value="" disabled selected>Select your Qualification</option>
+                        <option value="highschool">Higher Secondary</option>
+                        <option value="bachelor" {% if student.qualification == 'bachelor' %}selected{% endif %}>Bachelor's Degree</option>
+                        <option value="master" {% if student.qualification == 'master' %}selected{% endif %}>Master's Degree</option>
+                        <option value="phd" {% if student.qualification == 'phd' %}selected{% endif %}>PhD</option>
+                    </select>
+
+            <div class="mb-3">
+                <label for="college" class="form-label">College</label>
+                <input type="text" class="form-control" id="college" name="college" value="{{ student.college }}">
+            </div>
+            <div class="mb-3">
+                    <label for="university" class="form-label">University</label>
+                    <input type="text" class="form-control" id="university" name="university" value="{{ student.university }}">
+            </div>
+            <div class="mb-3">
+                <label for="course" class="form-label">Course</label>
+                <input type="text" class="form-control" id="course" name="course" value="{{ student.course }}">
+            </div>
+            <div class="mb-3">
+                <label for="graduation_year" class="form-label">Graduation Year</label>
+                <input type="number" class="form-control" id="graduation_year" name="graduation_year" value="{{ student.graduation_year }}" minlength="4" maxlength="4">
+            </div>
+            <div>
+                <label for="experience" class="form-label">Work Experience</label>
+                <input type="text" class="form-control" id="experience" name="experience" value="{{ student.experience }}">
+            </div>
+        </div>
+
+        <div title="Address Details"> 
+            <h3>Address Details</h3>
+            <div class="mb-3">
+                <label for="city_state" class="form-label">City, State</label>
+                <input list="city_state" name="city_state" class="form-control mb-3" value="{{ student.city_state }}">
+                <datalist id="city_state">
+                    <option value="Mumbai, Maharashtra" {% if student.city_state == 'Mumbai, Maharashtra' %}selected{% endif %}>
+                    <option value="Pune, Maharashtra" {% if student.city_state == 'Pune, Maharashtra' %}selected{% endif %}>
+                    <option value="Nagpur, Maharashtra" {% if student.city_state == 'Nagpur, Maharashtra' %}selected{% endif %}>
+                    <option value="Nashik, Maharashtra" {% if student.city_state == 'Nashik, Maharashtra' %}selected{% endif %}>
+                    <option value="Aurangabad, Maharashtra" {% if student.city_state == 'Aurangabad, Maharashtra' %}selected{% endif %}>
+                    <option value="Thane, Maharashtra" {% if student.city_state == 'Thane, Maharashtra' %}selected{% endif %}>
+                    <option value="Pimpri-Chinchwad, Maharashtra" {% if student.city_state == 'Pimpri-Chinchwad, Maharashtra' %}selected{% endif %}>
+                    <option value="Amravati, Maharashtra" {% if student.city_state == 'Amravati, Maharashtra' %}selected{% endif %}>
+
+                    <option value="Bangalore, Karnataka" {% if student.city_state == 'Bangalore, Karnataka' %}selected{% endif %}>
+                    <option value="Hyderabad, Telangana" {% if student.city_state == 'Hyderabad, Telangana' %}selected{% endif %}>
+                    <option value="Chennai, Tamil Nadu" {% if student.city_state == 'Chennai, Tamil Nadu' %}selected{% endif %}>
+                    <option value="Delhi, NCR" {% if student.city_state == 'Delhi, NCR' %}selected{% endif %}>
+                    <option value="Kolkata, West Bengal" {% if student.city_state == 'Kolkata, West Bengal' %}selected{% endif %}>
+                    <option value="Ahmedabad, Gujarat" {% if student.city_state == 'Ahmedabad, Gujarat' %}selected{% endif %}>
+                    
+                    <option value="Indore, Madhya Pradesh" {% if student.city_state == 'Indore, Madhya Pradesh' %}selected{% endif %}>
+                    <option value="Bhopal, Madhya Pradesh" {% if student.city_state == 'Bhopal, Madhya Pradesh' %}selected{% endif %}>
+                    <option value="Jaipur, Rajasthan" {% if student.city_state == 'Jaipur, Rajasthan' %}selected{% endif %}>
+                    <option value="Lucknow, Uttar Pradesh" {% if student.city_state == 'Lucknow, Uttar Pradesh' %}selected{% endif %}>
+                    <option value="Noida, Uttar Pradesh" {% if student.city_state == 'Noida, Uttar Pradesh' %}selected{% endif %}>
+                    <option value="Gurgaon, Haryana" {% if student.city_state == 'Gurgaon, Haryana' %}selected{% endif %}>
+                    <option value="Chandigarh, Punjab/Haryana" {% if student.city_state == 'Chandigarh, Punjab/Haryana' %}selected{% endif %}>
+                    <option value="Patna, Bihar" {% if student.city_state == 'Patna, Bihar' %}selected{% endif %}>
+                    <option value="Ranchi, Jharkhand" {% if student.city_state == 'Ranchi, Jharkhand' %}selected{% endif %}>
+                    <option value="Bhubaneswar, Odisha" {% if student.city_state == 'Bhubaneswar, Odisha' %}selected{% endif %}>
+                    <option value="Guwahati, Assam" {% if student.city_state == 'Guwahati, Assam' %}selected{% endif %}>
+                    <option value="Thiruvananthapuram, Kerala" {% if student.city_state == 'Thiruvananthapuram, Kerala' %}selected{% endif %}>
+                    <option value="Kochi, Kerala" {% if student.city_state == 'Kochi, Kerala' %}selected{% endif %}>
+                    <option value="Coimbatore, Tamil Nadu" {% if student.city_state == 'Coimbatore, Tamil Nadu' %}selected{% endif %}>
+                    <option value="Visakhapatnam, Andhra Pradesh" {% if student.city_state == 'Visakhapatnam, Andhra Pradesh' %}selected{% endif %}>
+                    <option value="Vijayawada, Andhra Pradesh" {% if student.city_state == 'Vijayawada, Andhra Pradesh' %}selected{% endif %}>
+                    <option value="Dehradun, Uttarakhand" {% if student.city_state == 'Dehradun, Uttarakhand' %}selected{% endif %}>
+                    <option value="Raipur, Chhattisgarh" {% if student.city_state == 'Raipur, Chhattisgarh' %}selected{% endif %}>
+                </datalist>
+            </div>
+            <div class="mb-3">
+                <label for="address" class="form-label">Address</label>
+                <input type="text" class="form-control" id="address" name="address" value="{{ student.address }}">
+            </div>  
+        </div>
+
+        <div title="Preferences"> 
+            <h3>Preferences</h3>
+             <div class="mb-3">
+                <label for="job_preference">Job Preference</label>
+                    <select id="job_preference" name="job_preference>
+                        <option value="" disabled selected>Select Job Type</option>
+                        <option value="full_time" {% if student.job_preference == 'full_time' %}selected{% endif %}>Internship</option>
+                        <option value="full_time" {% if student.job_preference == 'full_time' %}selected{% endif %}>Full Time Job</option>
+                        <option value="part_time" {% if student.job_preference == 'part_time' %}selected{% endif %}>Part Time Job</option>
+                        <option value="freelance" {% if student.job_preference == 'freelance' %}selected{% endif %}>Freelance</option>
+                    </select>
+             </div>
+             <div class="mb-3">
+                <label for="work_mode_preference">Work Mode Preference</label>
+                    <select id="work_mode_preference" name="work_mode_preference">
+                        <option value="" disabled selected>Select your Work Mode Preference</option>
+                        <option value="remote" {% if student.work_mode_preference == 'remote' %}selected{% endif %}>Remote</option>
+                        <option value="onsite" {% if student.work_mode_preference == 'onsite' %}selected{% endif %}>On-site</option>
+                        <option value="hybrid" {% if student.work_mode_preference == 'hybrid' %}selected{% endif %}>Hybrid</option>
+                    </select>
+             </div>
+             <div class="mb-3">
+                <label for="location_preference">Are You Open to Relocation?</label>
+                    <select id="location_preference" name="location_preference">
+                        <option value="" disabled selected>Relocation Status</option>
+                        <option value="remote" {% if student.location_preference == 'remote' %}selected{% endif %}>Yes</option>
+                        <option value="onsite" {% if student.location_preference == 'onsite' %}selected{% endif %}>No</option>
+                        <option value="hybrid" {% if student.location_preference == 'hybrid' %}selected{% endif %}>Open to Discuss</option>
+                    </select>
+             </div>
+        </div> 
+
+        <div title="Portfolio Details"> 
+             <h3>Portfolio Details</h3>
+             <div class="mb-3">
+                <label for="resume" class="form-label">Upload Resume (PDF only)</label>
+                <input type="file" class="form-control" name="resume" value="{{ student.resume }}" id="resume" accept=".pdf">
+            </div>
+            <div class="mb-3">
+                <label for="linkedin_profile" class="form-label">LinkedIn Profile</label>
+                <input type="url" class="form-control" id="linkedin_profile" name="linkedin_profile" value="{{ student.linkedin_profile }}">
+             </div>
+             <div class="mb-3">
+                <label for="github_profile" class="form-label">GitHub Profile</label>
+                <input type="url" class="form-control" id="github_profile" name="github_profile" value="{{ student.github_profile }}">
+             </div>
+        </div>
+
+        <!-- <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" name="terms_agreed" id="terms" required>
+            <label class="form-check-label" for="terms">
+                I agree to the Terms and Conditions and allow the placement cell to share my profile with recruiters.
+            </label>
+        </div>   
+        <div class="invalid-feedback">
+        You must agree before submitting.
+        </div> -->
+        <button type="submit" class="btn btn-primary w-100">Update Profile</button>
+    </form>
+</div>

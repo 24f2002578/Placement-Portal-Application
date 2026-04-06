@@ -1,0 +1,186 @@
+<div class="container-fluid py-4 px-lg-5 bg-light">
+    <div
+        class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-5 bg-white p-4 rounded shadow-sm border">
+        <div>
+            <h2 class="mb-1 text-dark">Admin Dashboard</h2>
+            <p class="text-muted mb-md-0">Control Center</p>
+        </div>
+        <form class="d-flex mt-3 mt-md-0" role="search">
+            <div class="input-group shadow-sm">
+                <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-primary" type="submit">Search</button>
+            </div>
+        </form>
+    </div>
+    <div class="row g-4 mb-5"> <!--3 blocks-->
+        <!-- Registered Companies -->
+        <div class="col-xl-4 col-lg-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h5 class="mb-0 text-dark">Registered Companies</h5>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        {% for company in companies %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                            <div>
+                                <span class="d-block fw-semibold">{{company.company_name}}</span>
+                                <small class="text-muted">Company</small>
+                            </div>
+                            <div class="d-flex flex-column flex-sm-row gap-2">
+                                <a href="#" class="btn btn-sm btn-outline-danger">Blacklist</a>
+                            </div>
+                        </li>
+                        {% else %}
+                        <li class="list-group-item text-center text-muted p-4">
+                            No companies registered yet.
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        #Registered student
+        <div class="col-xl-4 col-lg-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h5 class="mb-0 text-dark">Student Profiles</h5>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        {% for student in students %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                            <div>
+                                <span class="d-block">{{student.first_name}} {{student.last_name}}</span>
+                                <small class="text-muted">Student</small>
+                            </div>
+                            <a href="#" class="btn btn-sm btn-success">View Profile</a>
+                            <a href="{{url_for('static', filename=student.resume)}} target="_blank"> View Resume</a></p>
+                            <a href="{{url_for('delete_student', user_id=student.user_id)}}" class="btn btn-sm btn-outline-danger">Delete Profile</a>
+                            <a href="#" class="btn btn-sm btn-success">Blacklist</a>
+                            <a href="#" class="btn btn-sm btn-success">Approve</a>
+                        </li>
+                        {% else %}
+                        <li class="list-group-item text-center text-muted p-4">
+                            No students registered yet.
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- #Company Applications -->
+        <div class="col-xl-4 col-lg-12">
+            {% for company in companies %}
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h5 class="mb-0 text-dark">Pending Approvals</h5>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        {% for company in companies %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                            <div>
+                                <span class="d-block fw-semibold">{{ company.company_name }}</span>
+                                <span class="badge bg-warning text-dark mt-1">Awaiting Approval</span>
+                            </div>
+                            <a href="#" class="btn btn-sm btn-success">View Profile</a>
+                            <a href="#" class="btn btn-sm btn-outline-danger">Blacklist</a>
+                            <a href="#" class="btn btn-sm btn-success">Approve</a>
+                            <a href="{{url_for('delete_company', user_id=company.user_id)}}" class="btn btn-sm btn-outline-danger">Delete Profile</a>
+                        </li>
+                        {% else %}
+                        <li class="list-group-item text-center text-muted p-4"> No pending applications.>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row g-4">
+
+        <!-- Student Applications-->
+        {% for application in applications %}
+        <div class="col-xl-7">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white border-bottom py-3 d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0 fw-bold text-dark">Student Applications</h5>
+                    <a href="#" class="btn btn-sm btn-outline-primary">View Profile</a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th scope="col" class="ps-4">No.</th>
+                                    <th scope="col">Student Name</th>
+                                    <th scope="col">Drive</th>
+                                    <th scope="col">Company</th>
+                                    <th scope="col"></th>
+                                    <th scope="col" class="text-end pe-4">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="ps-4 text-muted">{{student_id}}</td>
+                                    <td class="fw-semibold">{{student.first_name}} {{student.last_name}}
+                                    </td>
+                                    <td><span class="badge bg-secondary">{{placement_drive.job_role}}</span></td>
+                                    <td>{{company_profile.company_name}}</td>
+                                    <td class="text-muted">{{placement_drive.deadline}}</td>
+                                    <td class="text-end pe-4">
+                                        <a href="#" class="btn btn-sm btn-outline-primary">View</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- Ongoing Drives -->
+        {% for drive in drives %}
+        <div class="col-xl-5">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white border-bottom py-3 d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0 fw-bold text-dark">Ongoing Drives</h5>
+                    <span class="badge bg-success">Active</span>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th scope="col" class="ps-4">No</th>
+                                    <th scope="col">Drive Name</th>
+                                    <th scope="col" class="text-end pe-4">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="ps-4 text-muted">.</td>
+                                    <td class="fw-semibold">{{drive.job_role}}</td>
+                                    <td class="text-end pe-4">
+                                        <div class="d-flex justify-content-end gap-2">
+                                            <a href="#" class="btn btn-sm btn-outpline-secondary">View Drive</a>
+                                            <a href="{{url_for('delete_drive', drive_id=drive.user_id)}}" class="btn btn-sm btn-success">Delete</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+
+</div>

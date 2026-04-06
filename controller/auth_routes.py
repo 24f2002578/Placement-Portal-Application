@@ -32,7 +32,7 @@ def login():
             flash('Incorrect password')
             return render_template('login.html')
         
-        #Doubt
+        session['user_id'] = user.user_id
         session['user_email'] = user.user_email
         session['user_role'] = [role.name for role in user.roles]
         flash('You are successfully logged in')
@@ -78,6 +78,7 @@ def register():
         if len(password) < 8:
                 flash('Password should be at least 8 characters long')
                 return render_template('register.html')
+        
 
         if '@' not in email:
                 flash('Please enter a valid email address')

@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %} Placement Drive{% endblock %}
+
+{% block content %}
+
+<h1 class="text-center">Placement Drive</h1>
+<p class="text-center">Streamline Your Talent Search With Us.</p>
+<div class="container-fluid row justify-content-center mt-5">
+    <form class="col-6" action="{{url_for('drive')}}" method="POST">
+        <div class="mb-3">
+            <label for="job_role" class="form-label">Job Role</label>
+            <input type="text" class="form-control" id="job_role" name="job_role" placeholder="Job Role" required>
+        </div>
+        <div class="mb-3">
+            <label for="job_description" class="form-label">Description</label>
+            <input type="text" class="form-control" id="job_description" name="job_description" placeholder="Enter Job Description" required>
+        </div>
+        <div class="mb-3">
+            <label for="job_type" class="form-label">Job Type</label>
+            <select class="form-control" id="job_type" name="job_type" required>
+                <option value="On-campus">Internship</option>
+                <option value="Off-campus">Full-time</option>
+                <option value="Off-campus">Part-time</option>
+                <option value="Off-campus">Freelance</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="job_mode" class="form-label">Job Mode</label>
+            <select class="form-control" id="job_mode" name="job_mode" required>
+                <option value="On-campus">Remote</option>
+                <option value="Off-campus">On-site</option>
+                <option value="Hybrid">Hybrid</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="job_location" class="form-label">Job Location</label>
+            <input type="text" class="form-control" id="job_location" name="job_location"
+                placeholder="Enter Job Location">
+        </div>
+        <div class="mb-3">
+            <label for="work_hours" class="form-label">Work Hours</label>
+            <input type="text" class="form-control" id="work_hours" name="work_hours" placeholder="Enter Work Hours">
+        </div>
+        <div class="mb-3">
+            <label for="salary" class="form-label">Salary</label>
+            <input type="number" class="form-control" id="salary" name="salary" placeholder="Enter Salary">
+        </div>
+        <div class="mb-3">
+            <label for="deadline" class="form-label">Deadline</label>
+            <input type="date" class="form-control" id="deadline" name="deadline" placeholder="01-01-2026">
+        </div>
+        <div class="mb-3">
+            <label for="eligibility_criteria" class="form-label">Eligibility Criteria</label>
+            <textarea class="form-control" id="eligibility_criteria" name="eligibility_criteria" rows="3"
+                placeholder="Enter Eligibility Criteria"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="skills" class="form-label">Skills</label>
+            <input type="text" class="form-control" id="skills" name="skills" placeholder="Enter Skills">
+        </div>
+        <div class="mb-3">
+            <label for="status" class="form-label">Status</label>
+            <select class="form-control" id="status" name="status" required>
+                <option value="Pending">Pending</option>
+                <option value="Open">Open</option>
+                <option value="Closed">Closed</option>
+            </select>
+        </div>
+
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+
+        {% endblock %}
