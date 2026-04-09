@@ -72,7 +72,7 @@
 
                         {% if student.resume %}
                         <a href="{{ url_for('static', filename=student.resume) }}" target="_blank"
-                            class="btn btn-primary btn-sm">Download Resume</a>
+                            class="btn btn-outline-primary btn-sm">Download Resume</a>
                         {% endif %}
 
                         {% if not student.linkedin_profile and not student.github_profile and not student.resume %}

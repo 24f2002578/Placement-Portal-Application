@@ -149,15 +149,16 @@
                                             href="{{ url_for('view_drive_details', placement_id=drive.placement_id) }}"
                                             class="text-decoration-none">{{ drive.job_role }}</a></td>
                                     <td>
-                                        {% if app.status == 'Accepted' %}
-                                        <span class="badge bg-success">Accepted</span>
-                                        {% elif app.status == 'Rejected' %}
-                                        <span class="badge bg-danger">Rejected</span>
-                                        {% elif app.status in ['Pending', 'Applied'] %}
-                                        <span class="badge bg-warning text-dark">{{ app.status }}</span>
-                                        {% else %}
-                                        <span class="badge bg-secondary">{{ app.status }}</span>
-                                        {% endif %}
+                                        <button class="dropdown-toggle" value="Applied"
+                                            data-bs-toggle="dropdown">Applied</button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item"
+                                                    href="{{url_for('select_app', application_id=app.application_id)}}">Select</a>
+                                            </li>
+                                            <li><a class="dropdown-item"
+                                                    href="{{url_for('reject_app', application_id=app.application_id)}}">Reject</a>
+                                            </li>
+                                        </ul>
                                     </td>
                                     <td class="text-end pe-4">
                                         <a href="{{ url_for('view_student_profile', student_id=app.student.student_id) }}"

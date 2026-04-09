@@ -108,7 +108,6 @@ class Application(db.Model):
     application_id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.Integer, db.ForeignKey('student_profile.student_id'), nullable=False)
     placement_id = db.Column(db.Integer, db.ForeignKey('placement_drive.placement_id'), nullable=False)
-    date_applied = db.Column(db.DateTime, nullable=False)
     status = db.Column(db.String(20), nullable=False) # Applied, Shortlisted, Rejected, Accepted
 
     def __repr__(self):

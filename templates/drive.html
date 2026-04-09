@@ -14,7 +14,8 @@
         </div>
         <div class="mb-3">
             <label for="job_description" class="form-label">Description</label>
-            <input type="text" class="form-control" id="job_description" name="job_description" placeholder="Enter Job Description">
+            <input type="text" class="form-control" id="job_description" name="job_description"
+                placeholder="Enter Job Description">
         </div>
         <div class="mb-3">
             <label for="job_type" class="form-label">Job Type</label>
@@ -69,6 +70,7 @@
         </div>
 
         <div class="d-grid gap-2">
+            <a href="{{ url_for('home') }}" class="btn btn-outline-secondary">Cancel</a>
             <button type="submit" class="btn btn-primary">Create</button>
         </div>
     </form>

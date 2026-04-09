@@ -12,24 +12,8 @@
   </h4>
 
   {% if keyword %}
-  <!-- User -->
-  <h5 class="mt-2">Companies ({{ companies|length }})</h5>
-  {% if companies %}
-  <ul class="list-group mb-4">
-    {% for c in companies %}
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-      {{ c.company_name }} — {{ c.company_mail }}
-      <a href="{{ url_for('view_company_profile', company_id=c.company_id) }}"
-        class="btn btn-sm btn-outline-primary">View</a>
-    </li>
-    {% endfor %}
-  </ul>
-  {% else %}
-  <p class="text-muted">No companies found.</p>
-  {% endif %}
-
   <!-- Students -->
-  <h5 class="mt-4">Students ({{ students|length }})</h5>
+  <h5 class="mt-2">Students ({{ students|length }})</h5>
   {% if students %}
   <ul class="list-group mb-4">
     {% for s in students %}
@@ -45,7 +29,7 @@
   {% endif %}
 
   <!-- Companies -->
-  <h5 class="mt-2">Companies ({{ companies|length }})</h5>
+  <h5 class="mt-4">Companies ({{ companies|length }})</h5>
   {% if companies %}
   <ul class="list-group mb-4">
     {% for c in companies %}

@@ -364,17 +364,17 @@ def edit_drive(placement_id):
     skills = request.form.get('skills')
     status = request.form.get('status')
 
-    drive.job_role = job_role.strip() if job_role else drive.job_role
-    drive.job_description = job_description.strip() if job_description else drive.job_description
-    drive.job_type = job_type.strip() if job_type else drive.job_type
-    drive.job_mode = job_mode.strip() if job_mode else drive.job_mode
-    drive.job_location = job_location.strip() if job_location else drive.job_location
-    drive.work_hours = work_hours.strip() if work_hours else drive.work_hours
-    drive.salary = salary.strip() if salary else drive.salary
-    drive.deadline = deadline.strip() if deadline else drive.deadline
-    drive.eligibility_criteria = eligibility_criteria.strip() if eligibility_criteria else drive.eligibility_criteria
-    drive.skills = skills.strip() if skills else drive.skills
-    drive.status = status.strip() if status else drive.status
+    drive.job_role = job_role.strip()
+    drive.job_description = job_description.strip()
+    drive.job_type = job_type.strip()
+    drive.job_mode = job_mode.strip()
+    drive.job_location = job_location.strip()
+    drive.work_hours = work_hours.strip()
+    drive.salary = salary.strip()
+    drive.deadline = deadline.strip()
+    drive.eligibility_criteria = eligibility_criteria.strip()
+    drive.skills = skills.strip()
+    drive.status = status.strip()
 
     db.session.commit()
     flash('Drive updated successfully')
@@ -477,14 +477,20 @@ def approvals():
     if 'admin' not in session.get('user_role', []):
         flash('You are not authorized')
         return redirect('/home')
-    
+
+    keyword = request.args.get('keyword', '').strip().lower()
+
     unapproved_users = User.query.filter_by(is_approved=False).all()
-    
     blacklisted_users = User.query.join(Blacklist).all()
-    
-    return render_template('approve.html', 
-                           unapproved_users=unapproved_users, 
-                           blacklisted_users=blacklisted_users)
+
+    if keyword:
+        unapproved_users = [u for u in unapproved_users if keyword in (u.user_name or '').lower() or keyword in (u.user_email or '').lower()]
+        blacklisted_users = [u for u in blacklisted_users if keyword in (u.user_name or '').lower() or keyword in (u.user_email or '').lower()]
+
+    return render_template('approve.html',
+                           unapproved_users=unapproved_users,
+                           blacklisted_users=blacklisted_users,
+                           keyword=keyword)
 
 from datetime import datetime
 
@@ -499,7 +505,7 @@ def apply_drive(placement_id):
         flash('Please complete your student profile first before applying.')
         return redirect(url_for('studentinfo'))
         
-    drive = PlacementDrive.query.get_or_404(placement_id)
+    drive = PlacementDrive.query.get(placement_id)
     
     # Check if student already applied
     existing_application = Application.query.filter_by(student_id=student.student_id, placement_id=placement_id).first()
@@ -511,13 +517,12 @@ def apply_drive(placement_id):
         new_app = Application(
             student_id=student.student_id,
             placement_id=placement_id,
-            date_applied=datetime.now(),
             status='Applied'
         )
         db.session.add(new_app)
         db.session.commit()
         
-        flash(f'Application Submitted')
+        flash('Application Submitted. Please wait for further updates.')
         return redirect(url_for('home'))
         
     return render_template('student_application.html', drive=drive, student=student)
@@ -540,34 +545,57 @@ def drive_applications(placement_id):
 
 @app.route('/student_profile/<int:student_id>')
 def view_student_profile(student_id):
-    if 'company' not in session.get('user_role', None) and 'admin' not in session.get('user_role', None):
-        flash('Unauthorized access.')
+    student = StudentProfile.query.get(student_id)
+    if 'user_id' in session:
+        return render_template('view_student.html', student=student)
+    else:
         return redirect(url_for('home'))
         
-    student = StudentProfile.query.get(student_id)
-    return render_template('view_student.html', student=student)
+    
 
 @app.route('/company_profile/<int:company_id>')
 def view_company_profile(company_id):
-    if 'student' not in session.get('user_role', None) and 'admin' not in session.get('user_role', None):
-        flash('Unauthorized access.')
-        return redirect(url_for('home'))
-        
     company = CompanyProfile.query.get(company_id)
     return render_template('view_company.html', company=company)
+    if 'user_id' in session:
+        return render_template('view_company.html', company=company)
+    else:
+        return redirect(url_for('home'))
+
 
 @app.route('/drive_details/<int:placement_id>')
 def view_drive_details(placement_id):
-    drive = PlacementDrive.query.get(placement_id)
-    return render_template('view_drive.html', drive=drive)
+    if 'user_id' in session:
+        drive = PlacementDrive.query.get(placement_id)
+        return render_template('view_drive.html', drive=drive)
+    else:
+        return redirect(url_for('home'))
 
 @app.route('/search')
 def search():
     keyword = request.args.get('keyword', '').strip()
-    user=User.query.filter_by(User.userRole.ilike(f'%{keyword}%')).all() if keyword else None
-    students = StudentProfile.query.filter(StudentProfile.first_name.ilike(f'%{keyword}%') | StudentProfile.last_name.ilike(f'%{keyword}%')).all() if keyword else None
-    companies = CompanyProfile.query.filter(CompanyProfile.company_name.ilike(f'%{keyword}%')).all() if keyword else None
-    placements = PlacementDrive.query.filter(PlacementDrive.job_role.ilike(f'%{keyword}%')).all() if keyword else None
+    students = StudentProfile.query.filter(StudentProfile.first_name.ilike(f'%{keyword}%') | StudentProfile.last_name.ilike(f'%{keyword}%')).all()
+    companies = CompanyProfile.query.filter(CompanyProfile.company_name.ilike(f'%{keyword}%')).all()
+    placements = PlacementDrive.query.filter(PlacementDrive.job_role.ilike(f'%{keyword}%')).all() 
     return render_template('search.html', keyword=keyword, students=students, companies=companies, placements=placements)
 
+@app.route('/select_app/<int:application_id>')
+def select_app(application_id):
+    if 'company' not in session.get('user_role', []):
+        flash('Unauthorized access.')
+        return redirect(url_for('home'))
+    application = Application.query.get(application_id)
+    application.status = 'Selected'
+    db.session.commit()
+    return redirect(url_for('drive_applications', placement_id=application.placement_id))
+
+@app.route('/reject_app/<int:application_id>')
+def reject_app(application_id):
+    if 'company' not in session.get('user_role', []):
+        flash('Unauthorized access.')
+        return redirect(url_for('home'))
+    application = Application.query.get(application_id)
+    application.status = 'Rejected'
+    db.session.commit()
+    return redirect(url_for('drive_applications', placement_id=application.placement_id))
 

@@ -31,6 +31,10 @@ def login():
         if user.password != password:
             flash('Incorrect password')
             return render_template('login.html')
+
+        if user.is_approved==False:
+            flash('Approval is pending')
+            return render_template('login.html')
         
         session['user_id'] = user.user_id
         session['user_email'] = user.user_email

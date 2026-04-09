@@ -6,7 +6,7 @@
         <h3 class="mb-0 text-dark">Company Profile</h3>
         <a href="{{ url_for('home') }}" class="btn btn-outline-secondary">Back to Dashboard</a>
     </div>
-    
+
     <div class="row">
         <div class="col-lg-8 mb-4">
             <div class="card shadow-sm border-0 h-100">
@@ -17,7 +17,8 @@
                     <h6 class="text-muted mb-2">Contact Details</h6>
                     <p class="mb-1"><strong>Email:</strong> {{ company.company_mail }}</p>
                     <p class="mb-1"><strong>HR Contact:</strong> {{ company.Hr_contact }}</p>
-                    <p class="mb-4"><strong>Website:</strong> {% if company.website %}<a href="{{ company.website }}" target="_blank">{{ company.website }}</a>{% else %}N/A{% endif %}</p>
+                    <p class="mb-4"><strong>Website:</strong> {% if company.website %}<a href="{{ company.website }}"
+                            target="_blank">{{ company.website }}</a>{% else %}N/A{% endif %}</p>
 
                     <h6 class="text-muted mb-2">Description</h6>
                     <p class="mb-4">{{ company.company_description or 'No description provided.' }}</p>
@@ -27,7 +28,8 @@
                         {% for drive in company.placement_drives %}
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             {{ drive.job_role }} - {{ drive.status }}
-                            <a href="{{ url_for('view_drive_details', placement_id=drive.placement_id) }}" class="btn btn-sm btn-outline-primary">View Drive</a>
+                            <a href="{{ url_for('view_drive_details', placement_id=drive.placement_id) }}"
+                                class="btn btn-sm btn-outline-primary">View Drive</a>
                         </li>
                         {% else %}
                         <li class="list-group-item text-muted">No drives created yet.</li>
