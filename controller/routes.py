@@ -561,3 +561,13 @@ def view_drive_details(placement_id):
     drive = PlacementDrive.query.get(placement_id)
     return render_template('view_drive.html', drive=drive)
 
+@app.route('/search')
+def search():
+    keyword = request.args.get('keyword', '').strip()
+    user=User.query.filter_by(User.userRole.ilike(f'%{keyword}%')).all() if keyword else None
+    students = StudentProfile.query.filter(StudentProfile.first_name.ilike(f'%{keyword}%') | StudentProfile.last_name.ilike(f'%{keyword}%')).all() if keyword else None
+    companies = CompanyProfile.query.filter(CompanyProfile.company_name.ilike(f'%{keyword}%')).all() if keyword else None
+    placements = PlacementDrive.query.filter(PlacementDrive.job_role.ilike(f'%{keyword}%')).all() if keyword else None
+    return render_template('search.html', keyword=keyword, students=students, companies=companies, placements=placements)
+
+

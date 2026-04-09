@@ -20,6 +20,13 @@
         </li>
         {% endif %}
       </ul>
+      {% if session.get('user_email') %}
+      <form action="{{ url_for('search') }}" method="GET" class="d-flex" role="search">
+        <input type="search" name="keyword" class="form-control me-2" placeholder="Search students, companies or drives..."
+          aria-label="Search" value="{{ request.args.get('keyword', '') }}">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+      {% endif %}
     </div>
   </div>
 </nav>
