@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %} Update Placement Drive{% endblock %}
+
+{% block content %}
+
+<h1 class="text-center">Update Placement Drive</h1>
+<div class="container-fluid row justify-content-center mt-5">
+    <form class="col-6" action="{{url_for('edit_drive', placement_id=drive.placement_id)}}" method="POST">
+        <div class="mb-3">
+            <label for="job_role" class="form-label">Job Role</label>
+            <input type="text" class="form-control" id="job_role" name="job_role" value="{{drive.job_role}}">
+        </div>
+        <div class="mb-3">
+            <label for="job_description" class="form-label">Description</label>
+            <input type="text" class="form-control" id="job_description" name="job_description"
+                value="{{drive.job_description}}" placeholder="Enter Job Description">
+        </div>
+        <div class="mb-3">
+            <label for="job_type" class="form-label">Job Type</label>
+            <select class="form-control" id="job_type" name="job_type" value="{{drive.job_type}}">
+                <option value="On-campus" {% if drive.job_type=='On-campus' %}selected{% endif %}>Internship</option>
+                <option value="Off-campus" {% if drive.job_type=='Off-campus' %}selected{% endif %}>Full-time</option>
+                <option value="Off-campus" {% if drive.job_type=='Off-campus' %}selected{% endif %}>Part-time</option>
+                <option value="Off-campus" {% if drive.job_type=='Off-campus' %}selected{% endif %}>Freelance</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="job_mode" class="form-label">Job Mode</label>
+            <select class="form-control" id="job_mode" name="job_mode">
+                <option value="On-campus" {% if drive.job_mode=='On-campus' %}selected{% endif %}>Remote</option>
+                <option value="Off-campus" {% if drive.job_mode=='Off-campus' %}selected{% endif %}>On-site</option>
+                <option value="Hybrid" {% if drive.job_mode=='Hybrid' %}selected{% endif %}>Hybrid</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="job_location" class="form-label">Job Location</label>
+            <input type="text" class="form-control" id="job_location" name="job_location" value="{{drive.job_location}}"
+                placeholder="Enter Job Location">
+        </div>
+        <div class="mb-3">
+            <label for="work_hours" class="form-label">Work Hours</label>
+            <input type="text" class="form-control" id="work_hours" name="work_hours" value="{{drive.work_hours}}"
+                placeholder="Enter Work Hours">
+        </div>
+        <div class="mb-3">
+            <label for="salary" class="form-label">Salary</label>
+            <input type="number" class="form-control" id="salary" name="salary" value="{{drive.salary}}"
+                placeholder="Enter Salary">
+        </div>
+        <div class="mb-3">
+            <label for="deadline" class="form-label">Deadline</label>
+            <input type="date" class="form-control" id="deadline" name="deadline" value="{{drive.deadline}}"
+                placeholder="01-01-2026">
+        </div>
+        <div class="mb-3">
+            <label for="eligibility_criteria" class="form-label">Eligibility Criteria</label>
+            <textarea class="form-control" id="eligibility_criteria" name="eligibility_criteria" rows="3"
+                value="{{drive.eligibility_criteria}}" placeholder="Enter Eligibility Criteria"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="skills" class="form-label">Skills</label>
+            <input type="text" class="form-control" id="skills" name="skills" value="{{drive.skills}}"
+                placeholder="Enter Skills">
+        </div>
+        <div class="mb-3">
+            <label for="status" class="form-label">Status</label>
+            <select class="form-control" id="status" name="status">
+                <option value="Pending" {% if drive.status=='Pending' %}selected{% endif %}>Pending</option>
+                <option value="Open" {% if drive.status=='Open' %}selected{% endif %}>Open</option>
+                <option value="Closed" {% if drive.status=='Closed' %}selected{% endif %}>Closed</option>
+            </select>
+        </div>
+
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary">Update</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

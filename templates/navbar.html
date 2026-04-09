@@ -1,54 +1,25 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">Be-Rozgar</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" width="30" height="30"
+        class="d-inline-block align-text-top" onerror="this.style.display='none'">
+      Be-Rozgar
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         {% if not session.get('user_email', None) %}
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{{url_for('login')}}">Login</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{url_for('register')}}">Register</a>
-          </li>
-
-        {% else %}
-          {% if 'admin' in session.get('user_role') | list %}
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="a">Approve_Students</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{{url_for('logout')}}">Logout</a>
-            </li>
-
-          {% elif 'Student' in session.get('user_role', None) | list %}
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{{url_for('stude')}}">Placement Drive</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{{url_for('logout')}}">Logout</a>
-            </li>
-
-          {% elif 'Company' in session.get('user_role', None) | list %}
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{{url_for('placement_drive')}}">Placement Drive</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{{url_for('logout')}}">Logout</a>
-            </li>
-
-          {% else %}
-            <!-- <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="a">Approve_Students</a>
-            </li> -->
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{{url_for('logout')}}">Logout</a>
-            </li>
-          {% endif %}
-        {% endif %} 
-      </ul> 
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{{url_for('login')}}">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{url_for('register')}}">Register</a>
+        </li>
+        {% endif %}
+      </ul>
     </div>
   </div>
 </nav>

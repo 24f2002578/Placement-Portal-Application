@@ -62,9 +62,8 @@ def register():
         email = request.form.get('email', None)
         password = request.form.get("password", None)
         confirm_password = request.form.get('confirm-password', None)
-        user_name = request.form.get('fullname', None)
         role = request.form.get('role', None)
-
+        user_name = request.form.get('fullname', None)
 
             # Data validation
         if not email or not password   or not user_name or not role or not confirm_password:
@@ -74,6 +73,11 @@ def register():
         if password != confirm_password:
                 flash('Passwords do not match')
                 return render_template('register.html') 
+
+        if role == 'student':
+            is_approved=True
+        else:
+            is_approved=False
         
         if len(password) < 8:
                 flash('Password should be at least 8 characters long')
@@ -101,14 +105,16 @@ def register():
                 return render_template('register.html')
         
         # Create new user
-        new_user = User(user_email=email, password=password, user_name=user_name)
+        new_user = User(user_email=email, password=password, user_name=user_name, user_Role=role, is_approved=is_approved)
         db.session.add(new_user)
         db.session.flush()  # Get the user_id without committing
         
-        # Assign role to user
         user_role = UserRole(user_id=new_user.user_id, role_id=role_obj.id)
         db.session.add(user_role)
         db.session.commit()
 
         flash('You are successfully registered')
         return redirect(url_for('login'))
+
+
+

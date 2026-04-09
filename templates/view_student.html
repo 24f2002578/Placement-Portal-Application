@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block title %}Student Profile{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="mb-0 text-dark">Student Profile</h3>
+        <a href="{{ url_for('home') }}" class="btn btn-outline-secondary">Back to Dashboard</a>
+    </div>
+
+    <div class="row">
+        <!-- Personal Details -->
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="mb-0">Personal Info</h5>
+                </div>
+                <div class="card-body">
+                    <h4 class="fw-bold mb-1">{{ student.first_name }} {{ student.last_name }}</h4>
+                    <p class="text-muted mb-3"> {{ student.student_mail }}</p>
+
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2"><strong>Contact:</strong> {{ student.contact }}</li>
+                        <li class="mb-2"><strong>Gender:</strong> {{ student.gender }} ({{ student.age }} yrs)</li>
+                        <li class="mb-2"><strong>Location:</strong> {{ student.city_state }}</li>
+                        <li class="mb-0"><strong>Address:</strong> {{ student.address }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Academic & Technical Details -->
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h5 class="mb-0 fw-bold">Academic & Professional Details</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h6 class="text-muted mb-2">Education</h6>
+                            <p class="mb-1"><strong>Qualification:</strong> {{ student.qualification }}</p>
+                            <p class="mb-1"><strong>Course:</strong> {{ student.course }}</p>
+                            <p class="mb-1"><strong>College:</strong> {{ student.college }}</p>
+                            <p class="mb-1"><strong>University:</strong> {{ student.university or 'N/A' }}</p>
+                            <p class="mb-0"><strong>Graduation Year:</strong> {{ student.graduation_year }}</p>
+                        </div>
+                        <div class="col-md-6 mt-3 mt-md-0">
+                            <h6 class="text-muted mb-2">Preferences</h6>
+                            <p class="mb-1"><strong>Job Type:</strong> {{ student.job_preference or 'Open' }}</p>
+                            <p class="mb-1"><strong>Work Mode:</strong> {{ student.work_mode_preference or 'Open' }}</p>
+                            <p class="mb-0"><strong>Preferred Location:</strong> {{ student.location_preference or
+                                'Remote/Any' }}</p>
+                        </div>
+                    </div>
+
+                    {% if student.experience %}
+                    <h6 class="text-muted mb-2">Experience</h6>
+                    <p class="mb-4">{{ student.experience }}</p>
+                    {% endif %}
+
+                    <h6 class="text-muted mb-2">Links & Resume</h6>
+                    <div class="d-flex gap-3">
+                        {% if student.linkedin_profile %}
+                        <a href="{{ student.linkedin_profile }}" target="_blank"
+                            class="btn btn-outline-primary btn-sm">LinkedIn Profile</a>
+                        {% endif %}
+
+                        {% if student.github_profile %}
+                        <a href="{{ student.github_profile }}" target="_blank"
+                            class="btn btn-outline-dark btn-sm">GitHub Profile</a>
+                        {% endif %}
+
+                        {% if student.resume %}
+                        <a href="{{ url_for('static', filename=student.resume) }}" target="_blank"
+                            class="btn btn-primary btn-sm">Download Resume</a>
+                        {% endif %}
+
+                        {% if not student.linkedin_profile and not student.github_profile and not student.resume %}
+                        <span class="text-muted">No external links or resume provided.</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

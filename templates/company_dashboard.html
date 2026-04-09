@@ -5,8 +5,9 @@
             <h2 class="mb-1 text-dark">Edit Your Profile</h2>
             <p class="text-muted mb-md-0">Manage Your Profile</p>
         </div>
-        <div class="mt-3 mt-md-0">
+        <div class="mt-3 mt-md-0 d-flex gap-2">
             <a href="{{ url_for('drive') }}" class="btn btn-primary shadow-sm">+ Create New Drive</a>
+            <a href="{{ url_for('logout') }}" class="btn btn-outline-danger shadow-sm">Logout</a>
         </div>
     </div>
 
@@ -14,31 +15,45 @@
         <!-- Company Profile Section -->
         <div class="col-xl-4 col-lg-5">
             <div class="card shadow-sm h-100">
-                <h5 class="mb-0 fw-bold text-dark">Company Profile</h5>
+                <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold text-dark">Company Profile</h5>
+                </div>
                 <div class="card-body">
+                    {% if current_company %}
                     <div class="mb-4 pb-3 border-bottom">
-                    {% for company in companies %}
-                        <h4 class="fw-bold mb-2">{{ company.company_name }}</h4>
-                        <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0 fw-bold text-dark">Company Profile</h5>
-                        </div>
-                        <div class="text-muted"> 
-                            <a href="{{url_for('edit_company', user_id=company.user_id)}}" class="btn btn-sm btn-outline-primary">
-                            <a href="{{url_for('delete_company', user_id=company.user_id)}}" class="btn btn-sm btn-outline-danger">Delete Profile</a>
-                            <p class="mb-1"><strong>Email:</strong> {{ company.company_mail }}</p>
-                            <p class="mb-1"><strong>Website:</strong> <a href="{{ company.website }}" target="_blank" class="text-decoration-none">{{ company.website }}</a></p>
-                            <p class="mb-0"><strong>HR Contact:</strong> {{ company.Hr_contact }}</p>
+                        <h4 class="fw-bold mb-2">{{ current_company.company_name }}</h4>
+                        <div class="text-muted">
+                            <p class="mb-1"><strong>Email:</strong> {{ current_company.company_mail }}</p>
+                            <p class="mb-1"><strong>Website:</strong> <a href="{{ current_company.website }}"
+                                    target="_blank" class="text-decoration-none">{{ current_company.website }}</a></p>
+                            <p class="mb-0"><strong>HR Contact:</strong> {{ current_company.Hr_contact }}</p>
+                            <div class="d-flex gap-2 mt-2">
+                                <a href="{{url_for('view_company_profile', company_id=current_company.company_id)}}"
+                                    class="btn btn-sm btn-success">View Profile</a>
+                                <a href="{{url_for('edit_company', user_id=current_company.user_id)}}"
+                                    class="btn btn-sm btn-outline-primary">Edit Profile</a>
+                                <a href="{{url_for('delete_company', user_id=current_company.user_id)}}"
+                                    class="btn btn-sm btn-outline-danger">Delete Profile</a>
+                            </div>
                         </div>
                     </div>
                     <div>
                         <strong class="d-block mb-2 text-dark">About Company</strong>
-                        <p class="text-muted mb-0" style="font-size: 0.95rem;"> {{ company.company_description or "No description provided." }} 
+                        <p class="text-muted mb-0" style="font-size: 0.95rem;"> {{ current_company.company_description
+                            or "No
+                            description provided." }}
                         </p>
                     </div>
-                    {% endfor %}
+                    {% else %}
+                    <div class="text-center py-4">
+                        <p class="text-muted mb-3">You haven't set up your profile yet.</p>
+                        <a href="{{ url_for('companyinfo') }}" class="btn btn-sm btn-outline-primary">Create Profile</a>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
+
 
         <!-- #Drive Details Section  -->
         <div class="col-xl-8 col-lg-7">
@@ -77,8 +92,12 @@
                                     </td>
                                     <td class="text-end pe-4">
                                         <div class="d-flex justify-content-end gap-2">
-                                            <a href="#" class="btn btn-sm btn-outline-secondary">Update Status</a>
-                                            <a href="#" class="btn btn-sm btn-outline-primary">View Students</a>
+                                            <a href="{{url_for('view_drive_details', placement_id=drive.placement_id)}}"
+                                                class="btn btn-sm btn-outline-info">View Drive</a>
+                                            <a href="{{url_for('edit_drive', placement_id=drive.placement_id)}}"
+                                                class="btn btn-sm btn-outline-secondary">Update Status</a>
+                                            <a href="{{url_for('drive_applications', placement_id=drive.placement_id)}}"
+                                                class="btn btn-sm btn-outline-primary">View Students</a>
                                         </div>
                                     </td>
                                 </tr>
@@ -86,11 +105,75 @@
                                 <tr>
                                     <td colspan="5" class="text-center py-5 text-muted">
                                         <p class="mb-2">No placement drives created yet.</p>
-                                        <a href="{{url_for('drives')}}" class="btn btn-sm btn-outline-primary mt-2">Create Drive</a>
-                                    
+                                        <a href="{{url_for('drive')}}"
+                                            class="btn btn-sm btn-outline-primary mt-2">Create Drive</a>
                                     </td>
                                 </tr>
                                 {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Applications Section Row -->
+    <div class="row g-4 mb-4" id="recent-applications">
+        <div class="col-12">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom py-3 d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0 fw-bold text-dark">Recent Applications</h5>
+                    <span class="badge bg-primary">All Drives</span>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light text-secondary">
+                                <tr>
+                                    <th scope="col" class="ps-4 py-3">Student Name</th>
+                                    <th scope="col" class="py-3">Applied For</th>
+                                    <th scope="col" class="py-3">Status</th>
+                                    <th scope="col" class="text-end pe-4 py-3">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% set ns = namespace(found=false) %}
+                                {% for drive in drives %}
+                                {% for app in drive.applications %}
+                                {% set ns.found = true %}
+                                <tr>
+                                    <td class="ps-4 fw-semibold text-dark">{{ app.student.first_name }} {{
+                                        app.student.last_name }}</td>
+                                    <td class="text-muted"><a
+                                            href="{{ url_for('view_drive_details', placement_id=drive.placement_id) }}"
+                                            class="text-decoration-none">{{ drive.job_role }}</a></td>
+                                    <td>
+                                        {% if app.status == 'Accepted' %}
+                                        <span class="badge bg-success">Accepted</span>
+                                        {% elif app.status == 'Rejected' %}
+                                        <span class="badge bg-danger">Rejected</span>
+                                        {% elif app.status in ['Pending', 'Applied'] %}
+                                        <span class="badge bg-warning text-dark">{{ app.status }}</span>
+                                        {% else %}
+                                        <span class="badge bg-secondary">{{ app.status }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-end pe-4">
+                                        <a href="{{ url_for('view_student_profile', student_id=app.student.student_id) }}"
+                                            class="btn btn-sm btn-outline-primary">View Profile</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                {% endfor %}
+
+                                {% if not ns.found %}
+                                <tr>
+                                    <td colspan="5" class="text-center py-5 text-muted">
+                                        <p class="mb-0">No students have applied to your drives yet.</p>
+                                    </td>
+                                </tr>
+                                {% endif %}
                             </tbody>
                         </table>
                     </div>

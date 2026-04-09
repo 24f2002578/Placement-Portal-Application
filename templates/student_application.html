@@ -1,3 +1,57 @@
 {% extends 'base.html' %}
 {% block title %}Student Application{% endblock %}
 {% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header text-white bg-primary fw-bold py-3">
+                    <h4 class="mb-0">Placement Drive Application</h4>
+                </div>
+                <div class="card-body p-4">
+                    <h5 class="card-title fw-bold text-primary">{{ drive.job_role }}</h5>
+                    <h6 class="card-subtitle mb-3 text-muted">{{ drive.company.company_name }}</h6>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4 text-muted">Job Type</div>
+                        <div class="col-sm-8 fw-semibold">{{ drive.job_type }} | {{ drive.job_mode }}</div>
+                    </div>
+                    {% if drive.job_location %}
+                    <div class="row mb-3">
+                        <div class="col-sm-4 text-muted">Location</div>
+                        <div class="col-sm-8 fw-semibold">{{ drive.job_location }}</div>
+                    </div>
+                    {% endif %}
+                    {% if drive.salary %}
+                    <div class="row mb-3">
+                        <div class="col-sm-4 text-muted">Salary</div>
+                        <div class="col-sm-8 fw-semibold">{{ drive.salary }} LPA</div>
+                    </div>
+                    {% endif %}
+                    <hr>
+                    <h6>Job Description</h6>
+                    <p>{{ drive.job_description }}</p>
+
+                    {% if drive.eligibility_criteria %}
+                    <h6>Eligibility</h6>
+                    <p>{{ drive.eligibility_criteria }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card shadow border-top border-black border-4 p-4 mt-4">
+                <h5 class="mb-3">Confirm Submission</h5>
+                <p>You are applying as <strong>{{ student.first_name }} {{ student.last_name }}</strong> ({{
+                    student.student_mail }}). By clicking submit, your profile details will be submitted to the
+                    company's applicant pool.</p>
+                <form action="{{ url_for('apply_drive', placement_id=drive.placement_id) }}" method="POST">
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <a href="{{ url_for('home') }}" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-success px-4 fw-bold">Apply</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

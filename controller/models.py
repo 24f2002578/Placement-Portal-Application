@@ -5,6 +5,7 @@ class User(db.Model):
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_email = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(250), nullable=False)
+    user_Role = db.Column(db.String(50), nullable=False)
     user_name = db.Column(db.String(50), nullable=False) 
     is_approved = db.Column(db.Boolean, default=False)
 
@@ -12,6 +13,7 @@ class User(db.Model):
     student_profile = db.relationship('StudentProfile', backref='user', lazy=True, uselist=False)
     company_profile = db.relationship('CompanyProfile', backref='user', lazy=True, uselist=False)
     roles = db.relationship('Role', secondary='user_role', back_populates='users', viewonly=True, lazy=True)
+    blacklist = db.relationship('Blacklist', backref='user', lazy=True, uselist=False)
 
     def __repr__(self):
         return f'<User {self.user_email}>'
@@ -111,3 +113,15 @@ class Application(db.Model):
 
     def __repr__(self):
         return f'<Application Student ID {self.student_id} for Placement ID {self.placement_id}>'
+    
+class Blacklist (db.Model):
+    __tablename__ = 'blacklist'
+    blacklist_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+    
+    def __repr__(self):
+        return f'<Blacklist User ID {self.user_id}>' 
+
+
+
+

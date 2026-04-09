@@ -31,7 +31,7 @@ with app.app_context():
 
     admin_user = User.query.filter_by(user_email='24f2002578@ds.study.iitm.ac.in').first()
     if not admin_user:
-        admin_user = User(user_email='24f2002578@ds.study.iitm.ac.in',password='Admin123',user_name='Modi', is_approved=True)
+        admin_user = User(user_email='24f2002578@ds.study.iitm.ac.in',password='Admin123',user_name='Modi', is_approved=True, user_Role='admin')
         db.session.add(admin_user)
         #print(admin_user.id)
         admin_user_details = User.query.filter_by(user_email = '24f2002578@ds.study.iitm.ac.in').first()
@@ -50,4 +50,4 @@ from controller.routes import *
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=False)

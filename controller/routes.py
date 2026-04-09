@@ -1,3 +1,4 @@
+from controller.models import PlacementDrive
 from main import app
 from flask import render_template, request, session, flash, redirect, url_for
 from controller.models import *
@@ -9,24 +10,33 @@ def home():
     if 'user_email' in session:
         user_id = session.get('user_id')
         current_student = StudentProfile.query.filter_by(user_id=user_id).first()
-        return render_template('home.html', students=StudentProfile.query.all(), companies=CompanyProfile.query.all(), current_student=current_student)
+        current_company = CompanyProfile.query.filter_by(user_id=user_id).first()
+        drives = []
+        if current_company:
+            drives = PlacementDrive.query.filter_by(company_id=current_company.company_id).all()
+        approved_students = [s for s in StudentProfile.query.all() if s.user and s.user.is_approved and not s.user.blacklist]
+        approved_companies = [c for c in CompanyProfile.query.all() if c.user and c.user.is_approved and not c.user.blacklist]
+        open_drives = PlacementDrive.query.filter_by(status='Open').all()
+        return render_template('home.html', students=approved_students, companies=approved_companies, current_student=current_student, current_company=current_company, drives=drives, open_drives=open_drives)
     return render_template('home.html')
     
 
 # Student Profile Route
 @app.route('/studentinfo', methods=['GET', 'POST'])
 def studentinfo():
-    if request.method == 'GET':
-        if 'user_email' in session and 'user_id' in session:
-            return render_template('Student_detail.html')
+    if 'user_email' not in session or 'user_id' not in session:
         flash('Please log in to create student profile')
         return redirect('/login')
 
-    # POST
     user_id = session.get('user_id')
-    if not user_id:
-        flash('Session expired, please log in again')
-        return redirect('/login')
+
+    existing_profile = StudentProfile.query.filter_by(user_id=user_id).first()
+    if existing_profile:
+        flash('Profile already created! You have been redirected to edit your profile.')
+        return redirect(url_for('edit_student', user_id=user_id))
+
+    if request.method == 'GET':
+        return render_template('Student_detail.html')
     
     if request.method == 'POST':
         firstname = request.form.get('firstname')
@@ -90,22 +100,23 @@ def studentinfo():
     db.session.commit()
         
     flash('Student information submitted successfully')
-    return render_template('student_dashboard.html')
+    return redirect(url_for('home'))
 
 #Company Profile Route
 @app.route('/companyinfo', methods=['GET', 'POST'])
 def companyinfo():
     if request.method == 'GET':
         if 'user_email' in session and 'user_id' in session:
-            return render_template('Company_detail.html')
+            return render_template('company_detail.html')
+        
         flash('Please log in to access company info')
         return redirect('/login')
 
     # POST
     user_id = session.get('user_id')
-    if not user_id:
-        flash('Session expired, please log in again')
-        return redirect('/login')
+    if 'company' not in session.get('user_role', [None]):
+        flash('You Don\'t Have A Company Profile')
+        return redirect('/home')
 
     company_name = request.form.get('company_name')
     company_mail = request.form.get('company_mail')
@@ -116,13 +127,13 @@ def companyinfo():
 
     if not company_name or not company_mail or not Hr_contact:
         flash('Please fill in all required fields')
-        return render_template('Company_detail.html')
+        return render_template('company_detail.html')
     new_companyinfo = CompanyProfile(
         user_id=user_id,
         company_name=company_name.strip(),
         company_mail=company_mail.strip(),
         Hr_contact=Hr_contact.strip(),
-        website=website.strip(),
+        website=website.strip() if website else None,
         company_description=company_description.strip() if company_description else None
     )
     
@@ -131,21 +142,29 @@ def companyinfo():
     db.session.commit()
 
     flash('Company information submitted successfully')
-    return render_template('company_dashboard.html')
+    return redirect(url_for('home'))
 
 @app.route('/drive', methods=['GET', 'POST'])
 def drive():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Session expired, please log in again')
+        return redirect(url_for('login'))
+        
+    company = CompanyProfile.query.filter_by(user_id=user_id).first()
+
     if request.method == 'GET':
-        if 'company_id' in session and 'user_id' in session:
+        if company:
             return render_template('drive.html')
         flash('Complete your company profile to access placement drive features')
-        return redirect('/companyinfo') #Yeahhhhhhhhhh, dinga laka laka
+        return redirect(url_for('companyinfo'))
 
     # POST
-    company_id = session.get('company_id')
-    if not company_id:
-        flash('Session expired, please log in again')
-        return redirect('/login')
+    if not company:
+        flash('Complete your company profile first')
+        return redirect(url_for('companyinfo'))
+        
+    company_id = company.company_id
 
     job_role = request.form.get('job_role')
     job_description = request.form.get('job_description')
@@ -182,12 +201,9 @@ def drive():
     db.session.commit()
 
     flash('Placement drive created successfully')
-    return render_template('company_dashboard.html')
+    return redirect(url_for('home'))
 
-@app.route('/drives')
-def drives():
-    return render_template('drive.html')
-                           
+
 @app.route('/delete_student/<int:user_id>')
 def delete_student(user_id):
     if 'user_email' not in session:
@@ -213,12 +229,12 @@ def delete_company(user_id):
     flash('Company Profile deleted successfully')
     return redirect(url_for('home'))
 
-@app.route('/delete_drive/<int:user_id>')
-def delete_drive(user_id):
-    if 'admin' not in session.get('user_role', [None]):
+@app.route('/delete_drive/<int:placement_id>')
+def delete_drive(placement_id):
+    if 'user_id' not in session:
         flash('you are not authorized to delete drive')
         return redirect('/home')
-    drive = PlacementDrive.query.filter_by(user_id=user_id).first()
+    drive = PlacementDrive.query.filter_by(placement_id=placement_id).first()
     if not drive:
         flash('Drive not found')
         return redirect(url_for('home'))
@@ -322,3 +338,226 @@ def edit_student(user_id):
     db.session.commit()
     flash('Student Profile updated successfully')
     return redirect(url_for('home'))
+
+@app.route('/edit_drive/<int:placement_id>', methods=['GET', 'POST'])
+def edit_drive(placement_id):
+    if 'company' not in session.get('user_role', [None]):
+        flash('You Don\'t Have A Company Profile')
+        return redirect('/home')
+    drive = PlacementDrive.query.filter_by(placement_id=placement_id).first()
+    if not drive:
+        flash('Drive not found, Create a Drive')
+        return redirect(url_for('home'))
+    if request.method == 'GET':
+        return render_template('edit_drive.html', placement_id=placement_id, drive=drive)
+    
+    # POST
+    job_role = request.form.get('job_role')
+    job_description = request.form.get('job_description')
+    job_type = request.form.get('job_type')
+    job_mode = request.form.get('job_mode')
+    job_location = request.form.get('job_location')
+    work_hours = request.form.get('work_hours')
+    salary = request.form.get('salary')
+    deadline = request.form.get('deadline')
+    eligibility_criteria = request.form.get('eligibility_criteria')
+    skills = request.form.get('skills')
+    status = request.form.get('status')
+
+    drive.job_role = job_role.strip() if job_role else drive.job_role
+    drive.job_description = job_description.strip() if job_description else drive.job_description
+    drive.job_type = job_type.strip() if job_type else drive.job_type
+    drive.job_mode = job_mode.strip() if job_mode else drive.job_mode
+    drive.job_location = job_location.strip() if job_location else drive.job_location
+    drive.work_hours = work_hours.strip() if work_hours else drive.work_hours
+    drive.salary = salary.strip() if salary else drive.salary
+    drive.deadline = deadline.strip() if deadline else drive.deadline
+    drive.eligibility_criteria = eligibility_criteria.strip() if eligibility_criteria else drive.eligibility_criteria
+    drive.skills = skills.strip() if skills else drive.skills
+    drive.status = status.strip() if status else drive.status
+
+    db.session.commit()
+    flash('Drive updated successfully')
+    return redirect(url_for('home'))
+
+@app.route('/blacklist_user/<int:user_id>')
+def blacklist_user(user_id):
+    if 'admin' not in session.get('user_role', [None]):
+        flash('you are not authorized to blacklist user')
+        return redirect('/home')
+    user = User.query.filter_by(user_id=user_id).first()
+    if not user:
+        flash('User not found')
+        return redirect(url_for('home'))
+    
+    blacklist_entry = Blacklist.query.filter_by(user_id=user.user_id).first()
+    if not blacklist_entry:
+        db.session.add(Blacklist(user_id=user.user_id))
+        
+    db.session.commit()
+    flash('User blacklisted successfully')
+    return redirect(url_for('home'))
+
+@app.route('/remove_blacklist/<int:user_id>')
+def remove_blacklist(user_id):
+    if 'admin' not in session.get('user_role', [None]):
+        flash('you are not authorized to remove blacklist')
+        return redirect('/home')
+    user = User.query.filter_by(user_id=user_id).first()
+    if not user:
+        flash('User not found')
+        return redirect(url_for('home'))
+    
+    blacklist_entry = Blacklist.query.filter_by(user_id=user.user_id).first()
+    if blacklist_entry:
+        db.session.delete(blacklist_entry)
+        
+    db.session.commit()
+    flash('User allowlisted successfully')
+    return redirect(url_for('home'))
+
+# @app.route('/approve_users', methods=['GET'])
+# def approve_users():
+#     if 'user_email' in session:
+#         return render_template('approve.html',users=User.query.all())
+#     flash('you are not authorized to approve user')
+#     return redirect('/home')
+
+@app.route('/approve_user/<int:user_id>')
+def approve_user(user_id):
+    if 'admin' not in session.get('user_role', [None]):
+        flash('you are not authorized to approve user')
+        return redirect('/home')
+    user = User.query.filter_by(user_id=user_id).first()
+    if not user:
+        flash('User not found')
+        return redirect(url_for('home'))
+    user.is_approved = True
+    db.session.commit()
+    flash('User approved successfully')
+    return redirect(url_for('home'))
+
+
+@app.route('/reject_user/<int:user_id>')
+def reject_user(user_id):
+    if 'admin' not in session.get('user_role', []):
+        flash('You are not authorized to reject user')
+        return redirect('/home')
+        
+    user = User.query.filter_by(user_id=user_id).first()
+    if not user:
+        flash('User not found')
+        return redirect(url_for('home'))
+        
+    student = StudentProfile.query.filter_by(user_id=user.user_id).first()
+    if student:
+        db.session.delete(student)
+        
+    company = CompanyProfile.query.filter_by(user_id=user.user_id).first()
+    if company:
+        db.session.delete(company)
+        
+    # Delete roles mapping
+    user_roles = UserRole.query.filter_by(user_id=user.user_id).all()
+    for ur in user_roles:
+        db.session.delete(ur)
+        
+    blacklist_entry = Blacklist.query.filter_by(user_id=user.user_id).first()
+    if blacklist_entry:
+        db.session.delete(blacklist_entry)
+        
+    db.session.delete(user)
+    db.session.commit()
+    
+    flash('User registration rejected and removed')
+    return redirect(url_for('approvals'))
+
+@app.route('/approvals')
+def approvals():
+    if 'admin' not in session.get('user_role', []):
+        flash('You are not authorized')
+        return redirect('/home')
+    
+    unapproved_users = User.query.filter_by(is_approved=False).all()
+    
+    blacklisted_users = User.query.join(Blacklist).all()
+    
+    return render_template('approve.html', 
+                           unapproved_users=unapproved_users, 
+                           blacklisted_users=blacklisted_users)
+
+from datetime import datetime
+
+@app.route('/apply/<int:placement_id>', methods=['GET', 'POST'])
+def apply_drive(placement_id):
+    if 'student' not in session.get('user_role', []):
+        flash('You must be a student to apply.')
+        return redirect(url_for('home'))
+        
+    student = StudentProfile.query.filter_by(user_id=session.get('user_id')).first()
+    if not student:
+        flash('Please complete your student profile first before applying.')
+        return redirect(url_for('studentinfo'))
+        
+    drive = PlacementDrive.query.get_or_404(placement_id)
+    
+    # Check if student already applied
+    existing_application = Application.query.filter_by(student_id=student.student_id, placement_id=placement_id).first()
+    if existing_application:
+        flash('You have already applied to this drive.')
+        return redirect(url_for('home'))
+
+    if request.method == 'POST':
+        new_app = Application(
+            student_id=student.student_id,
+            placement_id=placement_id,
+            date_applied=datetime.now(),
+            status='Applied'
+        )
+        db.session.add(new_app)
+        db.session.commit()
+        
+        flash(f'Application Submitted')
+        return redirect(url_for('home'))
+        
+    return render_template('student_application.html', drive=drive, student=student)
+
+@app.route('/drive/<int:placement_id>/applications')
+def drive_applications(placement_id):
+    if 'company' not in session.get('user_role', []):
+        flash('Unauthorized access.')
+        return redirect(url_for('home'))
+        
+    company = CompanyProfile.query.filter_by(user_id=session.get('user_id')).first()
+    drive = PlacementDrive.query.get(placement_id)
+    
+    if drive.company_id != company.company_id:
+        flash('Unauthorized access.')
+        return redirect(url_for('home'))
+        
+    applications = Application.query.filter_by(placement_id=placement_id).all()
+    return render_template('drive_applications.html', drive=drive, applications=applications)
+
+@app.route('/student_profile/<int:student_id>')
+def view_student_profile(student_id):
+    if 'company' not in session.get('user_role', None) and 'admin' not in session.get('user_role', None):
+        flash('Unauthorized access.')
+        return redirect(url_for('home'))
+        
+    student = StudentProfile.query.get(student_id)
+    return render_template('view_student.html', student=student)
+
+@app.route('/company_profile/<int:company_id>')
+def view_company_profile(company_id):
+    if 'student' not in session.get('user_role', None) and 'admin' not in session.get('user_role', None):
+        flash('Unauthorized access.')
+        return redirect(url_for('home'))
+        
+    company = CompanyProfile.query.get(company_id)
+    return render_template('view_company.html', company=company)
+
+@app.route('/drive_details/<int:placement_id>')
+def view_drive_details(placement_id):
+    drive = PlacementDrive.query.get(placement_id)
+    return render_template('view_drive.html', drive=drive)
+

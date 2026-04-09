@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Drive Details{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="mb-0 text-dark">Drive Details</h3>
+        <a href="{{ url_for('home') }}" class="btn btn-outline-secondary">Back to Dashboard</a>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h5 class="mb-0 fw-bold">Job Role: {{ drive.job_role }}</h5>
+                </div>
+                <div class="card-body">
+                    <h6 class="text-muted mb-2">Company</h6>
+                    <p class="mb-4">{{ drive.company.company_name }}</p>
+
+                    <h6 class="text-muted mb-2">Job Description</h6>
+                    <p class="mb-4">{{ drive.job_description }}</p>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <p class="mb-1"><strong>Job Type:</strong> {{ drive.job_type }}</p>
+                            <p class="mb-1"><strong>Job Mode:</strong> {{ drive.job_mode }}</p>
+                            <p class="mb-0"><strong>Location:</strong> {{ drive.job_location }}</p>
+                        </div>
+                        <div class="col-md-6 mt-3 mt-md-0">
+                            <p class="mb-1"><strong>Work Hours:</strong> {{ drive.work_hours }}</p>
+                            <p class="mb-1"><strong>Salary:</strong> {{ drive.salary }}</p>
+                            <p class="mb-0"><strong>Deadline:</strong> {{ drive.deadline }}</p>
+                            <p class="mb-0"><strong>Status:</strong> {{ drive.status }}</p>
+                        </div>
+                    </div>
+                    
+                    <h6 class="text-muted mb-2">Eligibility & Skills</h6>
+                    <p class="mb-1"><strong>Eligibility:</strong> {{ drive.eligibility_criteria }}</p>
+                    <p class="mb-0"><strong>Skills:</strong> {{ drive.skills }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
