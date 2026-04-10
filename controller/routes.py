@@ -572,8 +572,8 @@ def view_drive_details(placement_id):
         return redirect(url_for('home'))
 
 @app.route('/search')
-def search():
-    keyword = request.args.get('keyword', '').strip()
+def search(): 
+    keyword = request.args.get('keyword', '').strip() # f repredents string jisme variable (keyword here) aa raha hai from html form and query will proceed with keyword
     students = StudentProfile.query.filter(StudentProfile.first_name.ilike(f'%{keyword}%') | StudentProfile.last_name.ilike(f'%{keyword}%')).all()
     companies = CompanyProfile.query.filter(CompanyProfile.company_name.ilike(f'%{keyword}%')).all()
     placements = PlacementDrive.query.filter(PlacementDrive.job_role.ilike(f'%{keyword}%')).all() 

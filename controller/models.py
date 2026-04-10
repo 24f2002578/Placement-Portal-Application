@@ -1,4 +1,5 @@
 from controller.database import db
+from datetime import datetime
 
 class User(db.Model):
     __tablename__ = 'user'
@@ -109,6 +110,7 @@ class Application(db.Model):
     student_id = db.Column(db.Integer, db.ForeignKey('student_profile.student_id'), nullable=False)
     placement_id = db.Column(db.Integer, db.ForeignKey('placement_drive.placement_id'), nullable=False)
     status = db.Column(db.String(20), nullable=False) # Applied, Shortlisted, Rejected, Accepted
+    applied_on = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
         return f'<Application Student ID {self.student_id} for Placement ID {self.placement_id}>'
