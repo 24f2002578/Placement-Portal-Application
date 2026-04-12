@@ -126,4 +126,3 @@ class Blacklist (db.Model):
 
 
 
-

@@ -15,7 +15,7 @@ def home():
         
         drives = []
         applications = []
-        
+        #Role specific data fetching
         if 'admin' in roles:
             drives = PlacementDrive.query.filter_by(is_approved=True).all()
             applications = Application.query.all()
