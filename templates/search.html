@@ -12,7 +12,24 @@
   </h4>
 
   {% if keyword %}
+  {% if not students and not companies and not placements %}
+  <div class="alert alert-info mt-4">
+    No results found for "<strong>{{ keyword }}</strong>".
+    {% set roles = session.get('user_role', []) %}
+    {% if 'student' in roles %}
+    Double check the spelling or search for different company names or job roles.
+    {% elif 'company' in roles %}
+    Try searching for other students or specific skills.
+    {% elif 'admin' in roles %}
+    Try different keywords to find students, companies, or drives.
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% set roles = session.get('user_role', []) %}
+
   <!-- Students -->
+  {% if 'admin' in roles or 'company' in roles %}
   <h5 class="mt-2">Students ({{ students|length }})</h5>
   {% if students %}
   <ul class="list-group mb-4">
@@ -27,8 +44,10 @@
   {% else %}
   <p class="text-muted">No students found.</p>
   {% endif %}
+  {% endif %}
 
   <!-- Companies -->
+  {% if 'admin' in roles or 'student' in roles %}
   <h5 class="mt-4">Companies ({{ companies|length }})</h5>
   {% if companies %}
   <ul class="list-group mb-4">
@@ -43,8 +62,10 @@
   {% else %}
   <p class="text-muted">No companies found.</p>
   {% endif %}
+  {% endif %}
 
   <!-- Drives -->
+  {% if 'admin' in roles or 'student' in roles %}
   <h5 class="mt-2">Placement Drives ({{ placements|length }})</h5>
   {% if placements %}
   <ul class="list-group mb-4">
@@ -58,6 +79,7 @@
   </ul>
   {% else %}
   <p class="text-muted">No placement drives found.</p>
+  {% endif %}
   {% endif %}
 
   {% else %}

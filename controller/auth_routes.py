@@ -32,7 +32,7 @@ def login():
             flash('Incorrect password')
             return render_template('login.html')
 
-        if user.is_approved==False:
+        if user.is_approved==False and user.user_Role != 'student':
             flash('Approval is pending')
             return render_template('login.html')
         

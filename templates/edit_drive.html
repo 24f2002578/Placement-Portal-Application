@@ -65,9 +65,12 @@
         </div>
         <div class="mb-3">
             <label for="status" class="form-label">Status</label>
+            {% set cannot_open = not drive.is_approved and 'admin' not in session.get('user_role', []) %}
             <select class="form-control" id="status" name="status">
                 <option value="Pending" {% if drive.status=='Pending' %}selected{% endif %}>Pending</option>
-                <option value="Open" {% if drive.status=='Open' %}selected{% endif %}>Open</option>
+                <option value="Open" {% if drive.status=='Open' %}selected{% endif %} {% if cannot_open %}disabled{% endif %}>
+                    Open {% if cannot_open %}(Requires Admin Approval){% endif %}
+                </option>
                 <option value="Closed" {% if drive.status=='Closed' %}selected{% endif %}>Closed</option>
             </select>
         </div>

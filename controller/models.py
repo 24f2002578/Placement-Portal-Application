@@ -98,6 +98,7 @@ class PlacementDrive(db.Model):
     skills = db.Column(db.String(256), nullable=True)
     deadline = db.Column(db.String(20), nullable=False)
     status = db.Column(db.String(20), default='Pending') # Open or Closed
+    is_approved = db.Column(db.Boolean, default=False)
 
     applications = db.relationship('Application', backref='placement_drive', lazy=True)
 
