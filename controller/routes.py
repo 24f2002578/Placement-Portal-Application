@@ -486,7 +486,7 @@ def reject_user(user_id):
     if company:
         db.session.delete(company)
         
-
+# Deleting user roles and blacklist entry
     user_roles = UserRole.query.filter_by(user_id=user.user_id).all()
     for ur in user_roles:
         db.session.delete(ur)
