@@ -86,7 +86,7 @@ def studentinfo():
             Resume.save(os.path.join(folder,filename))
             resume=os.path.join('student_resume/',filename) 
 
-
+    # Validation
     if not firstname or not lastname or not student_mail or not contact or not age or not gender or not qualification or not college or not course or not graduation_year or not address or not city_state or not resume:
         flash('Please fill in all required fields')
         return render_template('Student_detail.html')
@@ -467,7 +467,6 @@ def approve_user(user_id):
     flash('User approved successfully')
     return redirect(url_for('home'))
 
-
 @app.route('/reject_user/<int:user_id>')
 def reject_user(user_id):
     if 'admin' not in session.get('user_role', []):
@@ -501,7 +500,7 @@ def reject_user(user_id):
     
     flash('User registration rejected and removed')
     return redirect(url_for('approvals'))
-
+#approval
 @app.route('/approvals')
 def approvals():
     if 'admin' not in session.get('user_role', []):
